@@ -1,62 +1,109 @@
-import type { Request, Response } from 'express';
-import { db } from '../../../db/client.js';
-import { users } from '../../../db/schema.js';
-import { eq } from 'drizzle-orm';
-
-export default async function handler(req: Request, res: Response) {
-  try {
-    const { email, password } = req.body;
-
-    // Validation
-    if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        error: 'Email and password are required',
-      });
-    }
-
-    // Find user by email
-    const userList = await db.select().from(users).where(eq(users.email, email)).limit(1);
-
-    if (userList.length === 0) {
-      return res.status(401).json({
-        success: false,
-        error: 'Invalid email or password',
-      });
-    }
-
-    const user = userList[0];
-
-    // In production, you should use bcrypt to compare hashed passwords
-    // For now, we'll do a simple comparison (NOT SECURE - just for demo)
-    if (user.password !== password) {
-      return res.status(401).json({
-        success: false,
-        error: 'Invalid email or password',
-      });
-    }
-
-    // Successful login
-    // In production, generate JWT token here
-    return res.status(200).json({
-      success: true,
-      message: 'Login successful',
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        organization: user.organization,
-      },
-      // In production, include JWT token here
-      token: 'demo-jwt-token-' + user.id,
-    });
-  } catch (error) {
-    console.error('Login error:', error);
-    return res.status(500).json({
-      success: false,
-      error: 'Internal server error',
-      message: String(error),
-    });
-  }
-}
+Index: src/server/api/auth/login/POST.ts
+===================================================================
+--- src/server/api/auth/login/POST.ts	non-existent
++++ src/server/api/auth/login/POST.ts	new file
+@@ -0,0 +1,104 @@
++import type { Request, Response } from 'express';
++import { db } from '../../../db/client.js';
++import { users } from '../../../db/schema.js';
++import { eq } from 'drizzle-orm';
++import { comparePassword, generateToken } from '../../../middleware/auth.js';
++
++export default async function handler(req: Request, res: Response) {
++  try {
++    const { email, password } = req.body;
++
++    // Validation
++    if (!email || !password) {
++      return res.status(400).json({
++        success: false,
++        error: 'Email and password are required',
++      });
++    }
++
++    // Email format validation
++    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
++    if (!emailRegex.test(email)) {
++      return res.status(400).json({
++        success: false,
++        error: 'Invalid email format',
++      });
++    }
++
++    // Find user by email
++    const userResults = await db
++      .select()
++      .from(users)
++      .where(eq(users.email, email.toLowerCase()))
++      .limit(1);
++
++    if (!userResults || userResults.length === 0) {
++      return res.status(401).json({
++        success: false,
++        error: 'Invalid email or password',
++      });
++    }
++
++    const user = userResults[0];
++
++    // Check if user is active
++    if (!user.active) {
++      return res.status(403).json({
++        success: false,
++        error: 'Account is deactivated. Please contact support.',
++      });
++    }
++
++    // Verify password
++    const isPasswordValid = await comparePassword(password, user.passwordHash);
++
++    if (!isPasswordValid) {
++      return res.status(401).json({
++        success: false,
++        error: 'Invalid email or password',
++      });
++    }
++
++    // Update last login timestamp
++    await db
++      .update(users)
++      .set({ lastLogin: new Date() })
++      .where(eq(users.id, user.id));
++
++    // Generate JWT token
++    const token = generateToken({
++      id: user.id,
++      email: user.email,
++      role: user.role || 'user',
++    });
++
++    // Return user data (without password hash)
++    return res.status(200).json({
++      success: true,
++      message: 'Login successful',
++      data: {
++        token,
++        user: {
++          id: user.id,
++          email: user.email,
++          firstName: user.firstName,
++          lastName: user.lastName,
++          organization: user.organization,
++          role: user.role,
++          ministry: user.ministry,
++          phone: user.phone,
++          country: user.country,
++          verified: user.verified,
++          createdAt: user.createdAt,
++        },
++      },
++    });
++  } catch (error) {
++    console.error('Login error:', error);
++    return res.status(500).json({
++      success: false,
++      error: 'Internal server error',
++      message: String(error),
++    });
++  }
++}

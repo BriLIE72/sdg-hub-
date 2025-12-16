@@ -1,0 +1,567 @@
+Index: src/server/api/stakeholders/GET.ts
+===================================================================
+--- src/server/api/stakeholders/GET.ts	non-existent
++++ src/server/api/stakeholders/GET.ts	new file
+@@ -0,0 +1,562 @@
++import type { Request, Response } from 'express';
++
++export default async function handler(req: Request, res: Response) {
++  try {
++    // In production, fetch from database
++    // For now, return comprehensive stakeholder data
++    const stakeholderData = {
++      overview: {
++        totalStakeholders: 156,
++        activeEngagements: 42,
++        pendingRequests: 18,
++        satisfactionScore: 78,
++        lastUpdated: new Date().toISOString(),
++      },
++
++      stakeholderGroups: [
++        {
++          id: 1,
++          name: 'Government Agencies',
++          count: 24,
++          engagementLevel: 85,
++          priority: 'high',
++          color: '#3b82f6',
++        },
++        {
++          id: 2,
++          name: 'Civil Society Organizations',
++          count: 38,
++          engagementLevel: 72,
++          priority: 'high',
++          color: '#10b981',
++        },
++        {
++          id: 3,
++          name: 'Private Sector',
++          count: 45,
++          engagementLevel: 68,
++          priority: 'medium',
++          color: '#f59e0b',
++        },
++        {
++          id: 4,
++          name: 'Academic Institutions',
++          count: 22,
++          engagementLevel: 80,
++          priority: 'medium',
++          color: '#8b5cf6',
++        },
++        {
++          id: 5,
++          name: 'International Partners',
++          count: 15,
++          engagementLevel: 88,
++          priority: 'high',
++          color: '#ec4899',
++        },
++        {
++          id: 6,
++          name: 'Community Groups',
++          count: 12,
++          engagementLevel: 65,
++          priority: 'medium',
++          color: '#06b6d4',
++        },
++      ],
++
++      stakeholders: [
++        {
++          id: 1,
++          name: 'United Nations Development Programme',
++          abbreviation: 'UNDP',
++          type: 'International Partners',
++          contactPerson: 'Dr. Maria Santos',
++          email: 'maria.santos@undp.org',
++          phone: '+1-212-906-5000',
++          engagementLevel: 92,
++          priority: 'high',
++          sdgFocus: ['SDG 1', 'SDG 8', 'SDG 10', 'SDG 16'],
++          activeProjects: 8,
++          totalContribution: 12500000,
++          lastEngagement: '2024-12-14',
++          status: 'active',
++          interests: ['Poverty reduction', 'Economic development', 'Governance'],
++          expertise: ['Policy advisory', 'Capacity building', 'Technical assistance'],
++          collaborations: [
++            {
++              project: 'National Poverty Reduction Strategy',
++              role: 'Technical Partner',
++              budget: 5000000,
++              status: 'ongoing',
++            },
++            {
++              project: 'Governance Reform Program',
++              role: 'Funding Partner',
++              budget: 3500000,
++              status: 'ongoing',
++            },
++          ],
++          feedback: [
++            {
++              date: '2024-12-10',
++              rating: 5,
++              comment: 'Excellent collaboration on poverty reduction initiatives',
++              category: 'Partnership',
++            },
++          ],
++        },
++        {
++          id: 2,
++          name: 'World Bank',
++          abbreviation: 'WB',
++          type: 'International Partners',
++          contactPerson: 'Mr. John Anderson',
++          email: 'janderson@worldbank.org',
++          phone: '+1-202-473-1000',
++          engagementLevel: 88,
++          priority: 'high',
++          sdgFocus: ['SDG 1', 'SDG 4', 'SDG 8', 'SDG 9'],
++          activeProjects: 6,
++          totalContribution: 25000000,
++          lastEngagement: '2024-12-12',
++          status: 'active',
++          interests: ['Infrastructure', 'Education', 'Economic growth'],
++          expertise: ['Project financing', 'Economic analysis', 'Infrastructure development'],
++          collaborations: [
++            {
++              project: 'National Infrastructure Development',
++              role: 'Primary Funder',
++              budget: 15000000,
++              status: 'ongoing',
++            },
++            {
++              project: 'Education Sector Reform',
++              role: 'Technical & Financial Partner',
++              budget: 8000000,
++              status: 'ongoing',
++            },
++          ],
++          feedback: [
++            {
++              date: '2024-12-08',
++              rating: 4,
++              comment: 'Strong partnership on infrastructure projects',
++              category: 'Funding',
++            },
++          ],
++        },
++        {
++          id: 3,
++          name: 'National Chamber of Commerce',
++          abbreviation: 'NCC',
++          type: 'Private Sector',
++          contactPerson: 'Ms. Sarah Thompson',
++          email: 'sthompson@ncc.org',
++          phone: '+1-555-0123',
++          engagementLevel: 75,
++          priority: 'high',
++          sdgFocus: ['SDG 8', 'SDG 9', 'SDG 12'],
++          activeProjects: 5,
++          totalContribution: 3500000,
++          lastEngagement: '2024-12-15',
++          status: 'active',
++          interests: ['Business development', 'Innovation', 'Sustainability'],
++          expertise: ['Private sector engagement', 'Market analysis', 'Business advisory'],
++          collaborations: [
++            {
++              project: 'SME Development Program',
++              role: 'Implementation Partner',
++              budget: 2000000,
++              status: 'ongoing',
++            },
++            {
++              project: 'Green Business Initiative',
++              role: 'Co-Funder',
++              budget: 1500000,
++              status: 'planning',
++            },
++          ],
++          feedback: [
++            {
++              date: '2024-12-11',
++              rating: 4,
++              comment: 'Good collaboration on SME programs',
++              category: 'Implementation',
++            },
++          ],
++        },
++        {
++          id: 4,
++          name: 'National University Research Institute',
++          abbreviation: 'NURI',
++          type: 'Academic Institutions',
++          contactPerson: 'Prof. David Chen',
++          email: 'dchen@nuri.edu',
++          phone: '+1-555-0456',
++          engagementLevel: 82,
++          priority: 'medium',
++          sdgFocus: ['SDG 4', 'SDG 9', 'SDG 13'],
++          activeProjects: 7,
++          totalContribution: 1800000,
++          lastEngagement: '2024-12-13',
++          status: 'active',
++          interests: ['Research', 'Innovation', 'Climate science'],
++          expertise: ['Research & development', 'Data analysis', 'Policy research'],
++          collaborations: [
++            {
++              project: 'Climate Change Impact Study',
++              role: 'Research Partner',
++              budget: 800000,
++              status: 'ongoing',
++            },
++            {
++              project: 'Education Quality Assessment',
++              role: 'Technical Partner',
++              budget: 600000,
++              status: 'ongoing',
++            },
++          ],
++          feedback: [
++            {
++              date: '2024-12-09',
++              rating: 5,
++              comment: 'Excellent research quality and insights',
++              category: 'Research',
++            },
++          ],
++        },
++        {
++          id: 5,
++          name: 'Green Earth Alliance',
++          abbreviation: 'GEA',
++          type: 'Civil Society Organizations',
++          contactPerson: 'Ms. Emily Rodriguez',
++          email: 'erodriguez@greenearth.org',
++          phone: '+1-555-0789',
++          engagementLevel: 78,
++          priority: 'high',
++          sdgFocus: ['SDG 13', 'SDG 14', 'SDG 15'],
++          activeProjects: 4,
++          totalContribution: 950000,
++          lastEngagement: '2024-12-16',
++          status: 'active',
++          interests: ['Environmental conservation', 'Climate action', 'Biodiversity'],
++          expertise: ['Environmental advocacy', 'Community mobilization', 'Conservation'],
++          collaborations: [
++            {
++              project: 'National Reforestation Program',
++              role: 'Implementation Partner',
++              budget: 500000,
++              status: 'ongoing',
++            },
++            {
++              project: 'Marine Conservation Initiative',
++              role: 'Advocacy Partner',
++              budget: 450000,
++              status: 'planning',
++            },
++          ],
++          feedback: [
++            {
++              date: '2024-12-14',
++              rating: 4,
++              comment: 'Strong grassroots engagement',
++              category: 'Community',
++            },
++          ],
++        },
++        {
++          id: 6,
++          name: 'Health for All Foundation',
++          abbreviation: 'HFA',
++          type: 'Civil Society Organizations',
++          contactPerson: 'Dr. Michael Brown',
++          email: 'mbrown@healthforall.org',
++          phone: '+1-555-0321',
++          engagementLevel: 70,
++          priority: 'medium',
++          sdgFocus: ['SDG 3', 'SDG 6'],
++          activeProjects: 3,
++          totalContribution: 1200000,
++          lastEngagement: '2024-12-11',
++          status: 'active',
++          interests: ['Healthcare access', 'Public health', 'Water sanitation'],
++          expertise: ['Healthcare delivery', 'Community health', 'Health education'],
++          collaborations: [
++            {
++              project: 'Rural Healthcare Access',
++              role: 'Service Provider',
++              budget: 700000,
++              status: 'ongoing',
++            },
++            {
++              project: 'Clean Water Initiative',
++              role: 'Community Partner',
++              budget: 500000,
++              status: 'ongoing',
++            },
++          ],
++          feedback: [
++            {
++              date: '2024-12-07',
++              rating: 4,
++              comment: 'Effective healthcare delivery in rural areas',
++              category: 'Service Delivery',
++            },
++          ],
++        },
++        {
++          id: 7,
++          name: 'Tech Innovation Hub',
++          abbreviation: 'TIH',
++          type: 'Private Sector',
++          contactPerson: 'Mr. Alex Kim',
++          email: 'akim@techhub.com',
++          phone: '+1-555-0654',
++          engagementLevel: 68,
++          priority: 'medium',
++          sdgFocus: ['SDG 9', 'SDG 4'],
++          activeProjects: 4,
++          totalContribution: 2200000,
++          lastEngagement: '2024-12-15',
++          status: 'active',
++          interests: ['Digital innovation', 'Tech education', 'Startups'],
++          expertise: ['Technology development', 'Digital skills training', 'Innovation'],
++          collaborations: [
++            {
++              project: 'Digital Skills Training Program',
++              role: 'Training Provider',
++              budget: 1200000,
++              status: 'ongoing',
++            },
++            {
++              project: 'Smart City Initiative',
++              role: 'Technology Partner',
++              budget: 1000000,
++              status: 'planning',
++            },
++          ],
++          feedback: [
++            {
++              date: '2024-12-12',
++              rating: 5,
++              comment: 'Innovative approach to digital skills',
++              category: 'Training',
++            },
++          ],
++        },
++        {
++          id: 8,
++          name: 'Community Development Network',
++          abbreviation: 'CDN',
++          type: 'Community Groups',
++          contactPerson: 'Ms. Patricia Martinez',
++          email: 'pmartinez@cdn.org',
++          phone: '+1-555-0987',
++          engagementLevel: 65,
++          priority: 'medium',
++          sdgFocus: ['SDG 1', 'SDG 2', 'SDG 11'],
++          activeProjects: 5,
++          totalContribution: 650000,
++          lastEngagement: '2024-12-10',
++          status: 'active',
++          interests: ['Community development', 'Food security', 'Urban planning'],
++          expertise: ['Community organizing', 'Local development', 'Participatory planning'],
++          collaborations: [
++            {
++              project: 'Community Food Security Program',
++              role: 'Community Mobilizer',
++              budget: 350000,
++              status: 'ongoing',
++            },
++            {
++              project: 'Neighborhood Improvement Initiative',
++              role: 'Local Partner',
++              budget: 300000,
++              status: 'ongoing',
++            },
++          ],
++          feedback: [
++            {
++              date: '2024-12-06',
++              rating: 4,
++              comment: 'Strong community connections',
++              category: 'Community',
++            },
++          ],
++        },
++      ],
++
++      engagementActivities: [
++        {
++          id: 1,
++          type: 'Meeting',
++          title: 'Quarterly Stakeholder Forum',
++          date: '2024-12-20',
++          time: '14:00',
++          location: 'Conference Center',
++          attendees: 45,
++          status: 'scheduled',
++          agenda: ['SDG progress review', 'Partnership opportunities', 'Q&A session'],
++        },
++        {
++          id: 2,
++          type: 'Workshop',
++          title: 'Climate Action Planning Workshop',
++          date: '2024-12-18',
++          time: '09:00',
++          location: 'Ministry of Environment',
++          attendees: 28,
++          status: 'scheduled',
++          agenda: ['Carbon reduction strategies', 'Renewable energy', 'Stakeholder roles'],
++        },
++        {
++          id: 3,
++          type: 'Consultation',
++          title: 'Education Policy Consultation',
++          date: '2024-12-22',
++          time: '10:00',
++          location: 'Virtual',
++          attendees: 35,
++          status: 'scheduled',
++          agenda: ['Policy draft review', 'Stakeholder feedback', 'Implementation planning'],
++        },
++        {
++          id: 4,
++          type: 'Meeting',
++          title: 'Private Sector Roundtable',
++          date: '2024-12-15',
++          time: '15:00',
++          location: 'Chamber of Commerce',
++          attendees: 22,
++          status: 'completed',
++          agenda: ['Business partnerships', 'SDG alignment', 'Investment opportunities'],
++        },
++      ],
++
++      feedbackRequests: [
++        {
++          id: 1,
++          title: 'National Climate Action Plan - Draft Review',
++          description: 'We invite your feedback on the draft National Climate Action Plan',
++          deadline: '2024-12-25',
++          status: 'open',
++          responses: 12,
++          targetAudience: ['All Stakeholders'],
++          priority: 'high',
++        },
++        {
++          id: 2,
++          title: 'Education Sector Reform Consultation',
++          description: 'Share your insights on proposed education reforms',
++          deadline: '2024-12-30',
++          status: 'open',
++          responses: 8,
++          targetAudience: ['Academic Institutions', 'Civil Society Organizations'],
++          priority: 'high',
++        },
++        {
++          id: 3,
++          title: 'Infrastructure Investment Priorities',
++          description: 'Help us identify priority infrastructure projects',
++          deadline: '2025-01-05',
++          status: 'open',
++          responses: 5,
++          targetAudience: ['Private Sector', 'Government Agencies'],
++          priority: 'medium',
++        },
++      ],
++
++      insights: [
++        {
++          type: 'success',
++          title: 'High International Partner Engagement',
++          description:
++            'International partners show 88% average engagement level, significantly above target of 75%.',
++          priority: 'medium',
++          impact: 'Positive',
++        },
++        {
++          type: 'opportunity',
++          title: 'Community Group Engagement Gap',
++          description:
++            'Community groups at 65% engagement. Targeted outreach could improve participation by 20%.',
++          priority: 'high',
++          impact: 'Improvement needed',
++        },
++        {
++          type: 'warning',
++          title: 'Pending Feedback Requests',
++          description:
++            '18 stakeholder requests pending response. Average response time exceeds target by 3 days.',
++          priority: 'high',
++          impact: 'Action required',
++        },
++        {
++          type: 'success',
++          title: 'Academic Partnership Excellence',
++          description:
++            'Academic institutions show 82% engagement with high-quality research contributions.',
++          priority: 'medium',
++          impact: 'Positive',
++        },
++      ],
++
++      recommendations: [
++        {
++          title: 'Launch Community Engagement Initiative',
++          description:
++            'Develop targeted outreach program for community groups with local events and simplified communication.',
++          targetGroups: ['Community Groups'],
++          estimatedCost: 250000,
++          timeline: '6 months',
++          expectedImpact: '+20% engagement',
++          priority: 'high',
++        },
++        {
++          title: 'Establish Private Sector Advisory Council',
++          description:
++            'Create formal advisory body for private sector to provide regular input on economic policies.',
++          targetGroups: ['Private Sector'],
++          estimatedCost: 150000,
++          timeline: '3 months',
++          expectedImpact: 'Improved policy alignment',
++          priority: 'high',
++        },
++        {
++          title: 'Streamline Feedback Response Process',
++          description:
++            'Implement automated tracking system to reduce response time and improve stakeholder satisfaction.',
++          targetGroups: ['All Stakeholders'],
++          estimatedCost: 80000,
++          timeline: '2 months',
++          expectedImpact: '-50% response time',
++          priority: 'critical',
++        },
++        {
++          title: 'Expand Academic Research Partnerships',
++          description:
++            'Increase funding for research collaborations and establish joint research centers.',
++          targetGroups: ['Academic Institutions'],
++          estimatedCost: 500000,
++          timeline: '12 months',
++          expectedImpact: '+30% research output',
++          priority: 'medium',
++        },
++      ],
++    };
++
++    return res.status(200).json({
++      success: true,
++      data: stakeholderData,
++      timestamp: new Date().toISOString(),
++    });
++  } catch (error) {
++    console.error('Stakeholder data error:', error);
++    return res.status(500).json({
++      success: false,
++      error: 'Internal server error',
++      message: String(error),
++    });
++  }
++}

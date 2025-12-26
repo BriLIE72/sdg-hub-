@@ -1,8 +1,4 @@
-Index: package.json
-===================================================================
---- package.json	original
-+++ package.json	modified
-@@ -83,10 +83,8 @@
+
      "tailwind-merge": "^2.5.5",
      "tailwindcss-animate": "^1.0.7",
      "vaul": "^1.1.2",
@@ -13,7 +9,6 @@ Index: package.json
    },
    "devDependencies": {
      "@eslint/js": "^9.17.0",
-@@ -122,10 +120,11 @@
      "tsx": "^4.19.2",
      "typescript": "^5.7.2",
      "vite": "^6.0.3",

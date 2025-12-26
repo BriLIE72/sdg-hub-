@@ -1,8 +1,4 @@
-Index: server.js
-===================================================================
---- server.js	non-existent
-+++ server.js	new file
-@@ -0,0 +1,207 @@
+
 +#!/usr/bin/env node
 +
 +/**
@@ -12,37 +8,37 @@ Index: server.js
 + */
 +
 +// Load environment variables
-+require('dotenv-local').config();
+require('dotenv-local').config();
 +
-+const express = require('express');
-+const path = require('path');
-+const fs = require('fs');
+const express = require('express');
+const path = require('path');
+const fs = require('fs');
 +
 +// Create Express app
-+const app = express();
+const app = express();
 +
 +// Get port from environment or use default
-+const PORT = process.env.PORT || 3000;
-+const HOST = process.env.HOST || '0.0.0.0';
+const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
 +
 +// Trust proxy (important for cPanel/Passenger)
 +app.set('trust proxy', 1);
 +
 +// Security middleware
-+app.use((req, res, next) => {
+app.use((req, res, next) => {
 +  res.setHeader('X-Powered-By', 'SDG Hub');
 +  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
 +  res.setHeader('X-Content-Type-Options', 'nosniff');
 +  res.setHeader('X-XSS-Protection', '1; mode=block');
 +  next();
-+});
-+
+});
+
 +// Body parsing middleware
-+app.use(express.json({ limit: '10mb' }));
-+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 +
 +// CORS middleware
-+app.use((req, res, next) => {
+app.use((req, res, next) => {
 +  const allowedOrigins = process.env.CORS_ORIGIN 
 +    ? process.env.CORS_ORIGIN.split(',') 
 +    : ['*'];
@@ -64,8 +60,8 @@ Index: server.js
 +});
 +
 +// Serve static files from dist directory
-+const distPath = path.join(__dirname, 'dist');
-+if (fs.existsSync(distPath)) {
+const distPath = path.join(__dirname, 'dist');
+if (fs.existsSync(distPath)) {
 +  app.use(express.static(distPath, {
 +    maxAge: '1y',
 +    etag: true,
@@ -74,8 +70,8 @@ Index: server.js
 +}
 +
 +// Serve public assets
-+const publicPath = path.join(__dirname, 'public');
-+if (fs.existsSync(publicPath)) {
+const publicPath = path.join(__dirname, 'public');
+if (fs.existsSync(publicPath)) {
 +  app.use('/assets', express.static(path.join(publicPath, 'assets'), {
 +    maxAge: '1y',
 +  }));
@@ -85,8 +81,8 @@ Index: server.js
 +}
 +
 +// API routes - dynamically load from dist/server/api
-+const apiPath = path.join(__dirname, 'dist', 'server', 'api');
-+if (fs.existsSync(apiPath)) {
+const apiPath = path.join(__dirname, 'dist', 'server', 'api');
+if (fs.existsSync(apiPath)) {
 +  // Health check endpoint
 +  app.get('/api/health', (req, res) => {
 +    res.json({ 
@@ -150,8 +146,8 @@ Index: server.js
 +}
 +
 +// SPA fallback - serve index.html for all non-API routes
-+app.get('*', (req, res) => {
-+  const indexPath = path.join(distPath, 'index.html');
+app.get('*', (req, res) => {
+  const indexPath = path.join(distPath, 'index.html');
 +  if (fs.existsSync(indexPath)) {
 +    res.sendFile(indexPath);
 +  } else {
@@ -160,7 +156,7 @@ Index: server.js
 +});
 +
 +// Error handling middleware
-+app.use((err, req, res, next) => {
+app.use((err, req, res, next) => {
 +  console.error('Server Error:', err);
 +  res.status(500).json({
 +    error: 'Internal server error',
@@ -169,7 +165,7 @@ Index: server.js
 +});
 +
 +// Start server
-+const server = app.listen(PORT, HOST, () => {
+const server = app.listen(PORT, HOST, () => {
 +  console.log('');
 +  console.log('🚀 SDG Hub Server Started!');
 +  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
@@ -182,7 +178,7 @@ Index: server.js
 +});
 +
 +// Graceful shutdown
-+process.on('SIGTERM', () => {
+process.on('SIGTERM', () => {
 +  console.log('SIGTERM signal received: closing HTTP server');
 +  server.close(() => {
 +    console.log('HTTP server closed');
@@ -190,7 +186,7 @@ Index: server.js
 +  });
 +});
 +
-+process.on('SIGINT', () => {
+process.on('SIGINT', () => {
 +  console.log('SIGINT signal received: closing HTTP server');
 +  server.close(() => {
 +    console.log('HTTP server closed');
@@ -199,14 +195,14 @@ Index: server.js
 +});
 +
 +// Handle uncaught exceptions
-+process.on('uncaughtException', (error) => {
+process.on('uncaughtException', (error) => {
 +  console.error('Uncaught Exception:', error);
 +  process.exit(1);
 +});
 +
-+process.on('unhandledRejection', (reason, promise) => {
+process.on('unhandledRejection', (reason, promise) => {
 +  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 +  process.exit(1);
 +});
 +
-+module.exports = app;
+module.exports = app;
